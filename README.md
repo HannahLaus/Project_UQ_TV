@@ -16,4 +16,5 @@ We used the following packages for running the code other versions might be usea
 `phantominator` *(v0.7.0)*   
 `pylops` *(v2.2.0)*   
 `scipy` *(v1.9.1)*   
-`statsmodels` *(v0.13.2)*
+`statsmodels` *(v0.13.2)*    
+`torch` *(v1.9.0+cu111)*
