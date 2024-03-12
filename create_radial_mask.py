@@ -97,4 +97,4 @@ class RadialMaskFunc(object):
 mask_func = RadialMaskFunc((156,156), 47)
 mask = np.array(mask_func.mask)* np.ones((156,156))
 
-mask.dump("radial_full_mask_47_30per.dat", protocol=4)
+mask.dump("radial_mask.dat", protocol=4)
