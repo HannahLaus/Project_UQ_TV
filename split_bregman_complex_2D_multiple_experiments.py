@@ -28,17 +28,17 @@ image_abs = np.abs(image)
 
 """Determine the elements which are sampled"""
 if sampling == "radial":
-    samplecovariance = np.load("samplecov_radial_full_50per.dat",allow_pickle=True)  # exchange here for the right masked
-    M = np.load("M_radial_50_mont_lambda_0.0035_cc_fista_1000epochs.dat", allow_pickle=True)
+    samplecovariance = np.load("samplecov_radial.dat",allow_pickle=True)  # exchange here for the right masked
+    M = np.load("M_radial.dat", allow_pickle=True)
     Msamplecov = np.matmul(M, samplecovariance)
     diagonal = np.diagonal(np.matmul(np.matmul(M, samplecovariance), np.conjugate(np.transpose(M))))
-    mask = np.load("radial_full_mask_83_50per.dat", allow_pickle=True)
-elif sampling == "spiral":
-    samplecovariance = np.load("samplecov_spiral_full_43per.dat", allow_pickle=True)  #exchange here for the right masked
-    M = np.load("M_spiral_40_mont_lambda_0.0035_cc_fista_1000epochs.dat", allow_pickle=True)
+    mask = np.load("radial_mask.dat", allow_pickle=True)
+elif sampling == "spiral
+    samplecovariance = np.load("samplecov_spiral.dat", allow_pickle=True)  #exchange here for the right masked
+    M = np.load("M_spiral.dat", allow_pickle=True)
     Msamplecov = np.matmul(M, samplecovariance)
     diagonal = np.diagonal(np.matmul(np.matmul(M, samplecovariance), np.conjugate(np.transpose(M))))
-    #mask = np.load("radial_full_mask_83_50per.dat", allow_pickle=True)
+    #mask = np.load("radial_mask.dat", allow_pickle=True)
     mask = scipy.io.loadmat("k_space_mask_cart_w_edges_spiral_undersampling_factor_3.mat")
     mask = mask['k_space_mask']
     mask = mask[50:206,50:206]
@@ -222,5 +222,5 @@ print(est_prob_matrix)
 est_prob_matrix = est_prob_matrix.reshape(nx,nx)
 plt.imshow(image/100,  norm=colors.Normalize(0.8,1))
 plt.colorbar()
-plt.savefig('empprobmatrix_spiral_60_12pernoise.pdf')
+plt.savefig('empprobmatrix_radial.pdf')
 plt.show()
