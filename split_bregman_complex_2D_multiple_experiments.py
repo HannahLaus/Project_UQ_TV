@@ -39,7 +39,7 @@ elif sampling == "spiral
     Msamplecov = np.matmul(M, samplecovariance)
     diagonal = np.diagonal(np.matmul(np.matmul(M, samplecovariance), np.conjugate(np.transpose(M))))
     #mask = np.load("radial_mask.dat", allow_pickle=True)
-    mask = scipy.io.loadmat("k_space_mask_cart_w_edges_spiral_undersampling_factor_3.mat")
+    mask = scipy.io.loadmat("k_space_mask_spiral.mat")
     mask = mask['k_space_mask']
     mask = mask[50:206,50:206]
 else:
