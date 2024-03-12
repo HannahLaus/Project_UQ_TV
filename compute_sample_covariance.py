@@ -12,7 +12,7 @@ import scipy
 sampling = "radial"
 
 if sampling == "radial":
-    mask = np.load("radial_full_mask_83_50per.dat", allow_pickle=True) #exchange for the right mask
+    mask = np.load("radial_mask.dat", allow_pickle=True) #exchange for the right mask
 elif sampling == "spiral":
     mask = scipy.io.loadmat("k_space_mask_cart_w_edges_spiral_undersampling_factor_3.mat") #exchange for the right mask
     mask = mask['k_space_mask']
@@ -23,14 +23,14 @@ else:
 
 print('Mask shape', np.shape(mask))
 
-iava = np.nonzero(mask.flatten())[0]
+idces = np.nonzero(mask.flatten())[0]
 ny, nx = mask.shape
-"""Calculate operator A=Rop*Fop"""
-Rop = pylops.Restriction(nx*ny, iava, axis=0, dtype=np.complex128)
-nxysub = Rop.shape[0]
-Fop = pylops.signalprocessing.FFT2D(dims=(ny, nx), norm="none", fftshift_after=True, ifftshift_before=True)
+"""Calculate operator A=P*F"""
+P = pylops.Restriction(nx*ny, idces, axis=0, dtype=np.complex128)
+nxysub = P.shape[0]
+F = pylops.signalprocessing.FFT2D(dims=(ny, nx), norm="none", fftshift_after=True, ifftshift_before=True)
 
 """Compute sample covariance and save it"""
-samplecovariance = 1/nxysub*(Rop*Fop).H*Rop*Fop*np.eye(nx*nx)
-samplecovariance.dump("samplecov_radial_70per.dat", protocol=4)
+samplecovariance = 1/nxysub*(R*F).H*R*F*np.eye(nx*nx)
+samplecovariance.dump("samplecov_radial.dat", protocol=4)
 
