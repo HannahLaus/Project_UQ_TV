@@ -35,14 +35,14 @@ niter_in = 50
 
 """Load mask, samplecovariance matrix and M and calculate diagonal"""
 if sampling == "radial":
-    samplecovariance = np.load("samplecov_radial_full_50per.dat",allow_pickle=True)  # exchange here for the right masked
-    M = np.load("M_radial_50_mont_lambda_0.0035_cc_fista_1000epochs.dat", allow_pickle=True)
+    samplecovariance = np.load("samplecov_radial.dat",allow_pickle=True)  # exchange here for the right masked
+    M = np.load("M_radial.dat", allow_pickle=True)
     Msamplecov = np.matmul(M, samplecovariance)
     diagonal = np.diagonal(np.matmul(np.matmul(M, samplecovariance), np.conjugate(np.transpose(M))))
-    mask = np.load("radial_full_mask_83_50per.dat", allow_pickle=True)
+    mask = np.load("radial_mask.dat", allow_pickle=True)
 elif sampling == "spiral":
-    samplecovariance = np.load("samplecov_spiral_full_43per.dat", allow_pickle=True)  #exchange here for the right masked
-    M = np.load("M_spiral_40_mont_lambda_0.0035_cc_fista_1000epochs.dat", allow_pickle=True)
+    samplecovariance = np.load("samplecov_spiraldat", allow_pickle=True)  #exchange here for the right masked
+    M = np.load("M_spiral.dat", allow_pickle=True)
     Msamplecov = np.matmul(M, samplecovariance)
     diagonal = np.diagonal(np.matmul(np.matmul(M, samplecovariance), np.conjugate(np.transpose(M))))
     mask = scipy.io.loadmat("k_space_mask_cart_w_edges_spiral_undersampling_factor_3.mat")
