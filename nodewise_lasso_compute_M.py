@@ -29,13 +29,13 @@ else:
     raise Exception
 
 mask = cp.array(mask)
-iava = cp.nonzero(mask.flatten())[0]
+idces = cp.nonzero(mask.flatten())[0]
 ny, nx = mask.shape
 print('Length of image', nx)
-Rop = pylops.Restriction(nx*ny, iava, axis=0, dtype=np.complex128)
-nxysub = Rop.shape[0]
+P = pylops.Restriction(nx*ny, idces, axis=0, dtype=np.complex128)
+nxysub = P.shape[0]
 print('Number of undersampled elements', nxysub)
-Fop = pylops.signalprocessing.FFT2D(dims=(ny, nx), norm="none", fftshift_after=True, ifftshift_before=True)
+F = pylops.signalprocessing.FFT2D(dims=(ny, nx), norm="none", fftshift_after=True, ifftshift_before=True)
 
 eye = cp.eye(nx*nx)
 
@@ -55,15 +55,15 @@ for i in range(nx*ny):
     diagonal = cp.ones(nx*ny)
     diagonal[i] = 0
     eye_op = pylops.Diagonal(diagonal)
-    datavector = Rop*Fop*eye[:, i]
+    datavector = P*F*eye[:, i]
     xinv = pylops.optimization.sparsity.fista(
-        1/np.sqrt(nxysub)*Rop * Fop * eye_op,
+        1/np.sqrt(nxysub)*P * F * eye_op,
         1/np.sqrt(nxysub)*datavector,
         niter=1000,
         eps=lamda[0],
         tol=1e-25,
     )[0]
-    tao[i] = (1/nxysub)*cp.vdot((datavector-Rop*Fop*eye_op*xinv),datavector)
+    tao[i] = (1/nxysub)*cp.vdot((datavector-P*F*eye_op*xinv),datavector)
     tao[i] = np.conjugate(tao[i])
     xinv = -xinv
     xinv[i] = 1
@@ -79,13 +79,13 @@ print("M", M)
 
 del matrixC
 del tao
-iava = cp.asnumpy(iava)
-Rop = pylops.Restriction(nx*ny, iava, axis=0, dtype=np.complex128)
+idces = cp.asnumpy(idces)
+P = pylops.Restriction(nx*ny, idces, axis=0, dtype=np.complex128)
 "Compute Covariance Matrix"
-true_cov = ((1/nxysub)*(Rop*Fop).H *Rop * Fop) * np.eye(nx*ny)
+true_cov = ((1/nxysub)*(P*F).H *P * F) * np.eye(nx*ny)
 print(true_cov[0])
 "Save M"
 cp.asnumpy(M).dump("M_radial.dat", protocol=4)
-"Chekc multiplicatipn M*samplecov"
+"Check multiplication M*samplecov"
 print('Approximate identity matrix', np.matmul(cp.asnumpy(M), true_cov[:,0]))
 print(np.max(np.abs(np.real(np.matmul(cp.asnumpy(M), true_cov[0])-np.eye(nx*ny)[0]))))
