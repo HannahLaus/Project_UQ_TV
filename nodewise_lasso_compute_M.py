@@ -14,7 +14,7 @@ import cupy as cp
 CALCULATION OF THE PRECISION MATRIX M USING THE NODEWISE LASSO.
 
 This script applies the nodewise LASSO to a given mask matrix. 
-It uses to package cupy for GPU acceleration/usage. 
+It uses the package cupy for GPU acceleration/usage. 
 If you don't have a GPU available you can change cp to np to always use numpy.
 """
 cp.cuda.Device(device=2).use()
@@ -73,17 +73,19 @@ for i in range(nx*ny):
 del eye
 del datavector
 del diagonal
-
+"Compute M"
 M = (1/tao)*matrixC
 print("M", M)
 
 del matrixC
 del tao
-"""Save M and compare check how well it inverts the samplecovariance matrix"""
 iava = cp.asnumpy(iava)
 Rop = pylops.Restriction(nx*ny, iava, axis=0, dtype=np.complex128)
+"Compute Covariance Matrix"
 true_cov = ((1/nxysub)*(Rop*Fop).H *Rop * Fop) * np.eye(nx*ny)
 print(true_cov[0])
-cp.asnumpy(M).dump("M_radial_70_mont_lambda_0.0035_cc_fista_1000_epochs.dat", protocol=4)
+"Save M"
+cp.asnumpy(M).dump("M_radial.dat", protocol=4)
+"Chekc multiplicatipn M*samplecov"
 print('Approximate identity matrix', np.matmul(cp.asnumpy(M), true_cov[:,0]))
 print(np.max(np.abs(np.real(np.matmul(cp.asnumpy(M), true_cov[0])-np.eye(nx*ny)[0]))))
