@@ -52,19 +52,19 @@ else:
     print('Matrixtype not available')
     raise Exception
 
-"""Calculate operator A=Rop*Fop """
+"""Calculate operator A=P*F """
 iava = np.nonzero(mask.flatten())[0]
 
 
-Rop = pylops.Restriction(nx*ny, iava, axis=0, dtype=np.complex128)
-nxysub = Rop.shape[0]
-Fop = pylops.signalprocessing.FFT2D(dims=(ny, nx), norm="none", fftshift_after=True, ifftshift_before=True)
+P = pylops.Restriction(nx*ny, iava, axis=0, dtype=np.complex128)
+nxysub = P.shape[0]
+F = pylops.signalprocessing.FFT2D(dims=(ny, nx), norm="none", fftshift_after=True, ifftshift_before=True)
 n_full = sigma/(np.sqrt(2)) * np.random.normal(0, 1, (ny, nx, 2)).view(np.complex128)[:,:,0]
-n = Rop * n_full.ravel()
-y = Rop * ((Fop * image).ravel() + n_full.ravel())
-print('noise rate', np.linalg.norm(n)/np.linalg.norm(Rop * Fop * image.ravel()))
-yfft = Fop * image + n_full
-ymask = Rop.mask(Fop * image+n_full).reshape(nx,ny)
+n = P * n_full.ravel()
+y = P * ((F * image).ravel() + n_full.ravel())
+print('noise rate', np.linalg.norm(n)/np.linalg.norm(P * F * image.ravel()))
+yfft = F * image + n_full
+ymask = P.mask(F * image+n_full).reshape(nx,ny)
 
 
 """Plot model, full kspace data, undersampled k-space data and mask"""
@@ -103,7 +103,7 @@ plt.savefig('modelimage.pdf')
 """TV minimization with Split Bregman"""
 
 #Calculate finite difference operator
-Dop = [
+D = [
     pylops.FirstDerivative(
         (ny, nx), axis=0, edge=False, kind="backward", dtype=np.complex128
     ),
@@ -117,9 +117,9 @@ Dop = [
 #Reconstruct image from K-space
 mu = 1/(mu_factor*(sigma * np.sqrt(12*np.log(nx*ny)))/np.sqrt(nxysub))
 xinv = pylops.optimization.sparsity.splitbregman(
-    1/np.sqrt(nxysub)*Rop * Fop,
+    1/np.sqrt(nxysub)*P * F,
     1/np.sqrt(nxysub)*y.ravel(),
-    Dop,
+    D,
     x0=image.ravel(),
     niter_outer=niter_out,
     niter_inner=niter_in,
@@ -148,9 +148,9 @@ print("L2-Norm ground truth", np.linalg.norm(image.ravel()))
 print("Loo-Norm Differenz", np.linalg.norm(est_gt.flatten(), ord=np.inf))
 
 """Calculate unbiased estimator"""
-residual = y-Rop*(Fop * xinv.ravel())
+residual = y-P*(F * xinv.ravel())
 
-estimator_u = xinv + (1/nxysub*np.matmul(M,((Rop*Fop).H*residual).ravel())).reshape(ny,nx)
+estimator_u = xinv + (1/nxysub*np.matmul(M,((P*F).H*residual).ravel())).reshape(ny,nx)
 
 diff_gt_est_u = estimator_u - image
 print("L2-Norm u-Differenz: ", np.linalg.norm(diff_gt_est_u.flatten()))
@@ -253,8 +253,8 @@ plt.savefig('TVinversion_withlines.pdf')
 
 
 """Calculate R and W"""
-step = Rop*(Fop * est_gt).ravel()
-restterm = 1/nxysub*np.matmul(M,((Rop*Fop).H*step).ravel()).reshape(nx,ny) - est_gt
+step = P*(F * est_gt).ravel()
+restterm = 1/nxysub*np.matmul(M,((P*F).H*step).ravel()).reshape(nx,ny) - est_gt
 restterm = restterm.flatten()
 print("L2-Norm Remainder term:", np.linalg.norm(restterm))
 print('Loo-Norm Remainder term', np.linalg.norm(restterm, ord=np.inf))
@@ -262,7 +262,7 @@ idx_rest_sorted = np.argsort(np.real(restterm))
 rest_sorted = restterm[idx_rest_sorted]
 
 
-Gaussianterm = 1/nxysub*np.matmul(M,((Rop*Fop).H*n).ravel()).reshape(nx,ny)
+Gaussianterm = 1/nxysub*np.matmul(M,((P*F).H*n).ravel()).reshape(nx,ny)
 Gaussianterm = Gaussianterm.flatten()
 Gaussianterm_normalized = np.sqrt(2*nxysub)*np.real(Gaussianterm)/(np.sqrt(diagonal)*sigma)  #np.sqrt(covariance_A)/sigma cov = 1 in uniform case
 print("L2-Norm Gauss term: ", np.linalg.norm(Gaussianterm))
