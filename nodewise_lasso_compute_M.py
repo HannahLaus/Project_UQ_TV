@@ -21,10 +21,10 @@ cp.cuda.Device(device=2).use()
 matrixtype = 'mat'
 """ Choose the correct matrix type here:"""
 if matrixtype == 'mat':
-    mask = scipy.io.loadmat("radial_full_mask_131_70per.dat")  # exchange for the right mask
+    mask = scipy.io.loadmat("spiral_mask.mat")  # exchange for the right mask
     mask = mask['k_space_mask']
 elif matrixtype == 'dat':
-    mask = np.load("radial_full_mask_131_70per.dat", allow_pickle=True)  # exchange for the right mask
+    mask = np.load("radial_mask.dat", allow_pickle=True)  # exchange for the right mask
 else:
     raise Exception
 
