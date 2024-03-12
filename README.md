@@ -1,8 +1,10 @@
 # Project_UQ_TV
 
 ## File usage
-The file `nodewise_lasso_compute_M.py` is used for constructing the precision matrix M via the nodewise lasso using FISTA.   
-Before running the Split-Bregman files for image reconstruction. You need to construct the M with the nodewise LASSO and run the file `compute_sample_covariance.py` to create the sample covariance matrix.  
+The file `split_bregman_complex_2D.py` reconstructs the image from an undersampled k-space using the Split-Bregman algorithm. Afterwards, it does the debiasing step as described in our paper and creates all the plots.
+The file `split_bregman_complex_2D_multiple_experiments.py`does the same but for multiple experiements and it averages the results over all the experiments in the end.
+The file `nodewise_lasso_compute_M.py` is used for constructing the precision matrix M via the nodewise lasso using FISTA, which is needed for running the above files. With the file `create_radial_mask.py`one can create a radial mask of different sizes and different undersampling rates.  
+Further you need to run the file `compute_sample_covariance.py` to create the sample covariance matrix, before running the split_bregam_complex_2D files.
 
 
 ## Requirements
