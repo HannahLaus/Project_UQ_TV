@@ -49,7 +49,7 @@ lamda = [0.0035*(regulparameter)]
 matrixC = cp.zeros((nx*nx,nx*nx), dtype=cp.complex64)
 tao = cp.zeros(nx*ny, dtype=cp.complex64)
 
-"""Compute the nodewise LASSO per node i wiuth FISTA"""
+"""Compute the nodewise LASSO per node i with FISTA"""
 for i in range(nx*ny):
     print(i)
     diagonal = cp.ones(nx*ny)
