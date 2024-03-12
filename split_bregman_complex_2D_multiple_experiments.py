@@ -48,13 +48,13 @@ else:
 iava = np.nonzero(mask.flatten())[0]
 
 """Define 2D-FFT and undersampling/restriction operator"""
-Rop = pylops.Restriction(nx*ny, iava, axis=0, dtype=np.complex128)
-nxysub = Rop.shape[0]
-Fop = pylops.signalprocessing.FFT2D(dims=(ny, nx), norm="none", fftshift_after=True, ifftshift_before=True)
+P = pylops.Restriction(nx*ny, iava, axis=0, dtype=np.complex128)
+nxysub = P.shape[0]
+F = pylops.signalprocessing.FFT2D(dims=(ny, nx), norm="none", fftshift_after=True, ifftshift_before=True)
 
 # Calculate the difference operator.
 
-Dop = [
+D = [
     pylops.FirstDerivative(
         (ny, nx), axis=0, edge=False, kind="backward", dtype=np.complex128
     ),
@@ -89,16 +89,16 @@ for j in range(num_exp):
     print(j)
     """Sample the noise given the variance sigma and calulate the measurements y"""
     n_full = sigma/(np.sqrt(2)) * np.random.normal(0, 1, (ny, nx, 2)).view(np.complex128)[:,:,0]
-    n = Rop * n_full.ravel()
-    y = Rop * ((Fop * image).ravel() + n_full.ravel())
-    rel_noise.append(np.linalg.norm(n)/np.linalg.norm(Rop * Fop * image.ravel()))
-    print('Noise level:', np.linalg.norm(n)/np.linalg.norm(Rop * Fop * image.ravel()))
+    n = P * n_full.ravel()
+    y = P * ((F * image).ravel() + n_full.ravel())
+    rel_noise.append(np.linalg.norm(n)/np.linalg.norm(P * F * image.ravel()))
+    print('Noise level:', np.linalg.norm(n)/np.linalg.norm(P * F * image.ravel()))
 
     """Apply Split Bregman and reconstruct the image."""
     xinv = pylops.optimization.sparsity.splitbregman(
-        1/np.sqrt(nxysub)*Rop * Fop,
+        1/np.sqrt(nxysub)*P * F,
         1/np.sqrt(nxysub)*y.ravel(),
-        Dop,
+        D,
         niter_outer=niter_out,
         niter_inner=niter_in,
         mu=mu,
@@ -130,9 +130,9 @@ for j in range(num_exp):
 
 
     """Calculate the residual, M and the unbiased estimator"""
-    residual = y-Rop*(Fop * xinv.ravel())
+    residual = y-P*(F * xinv.ravel())
 
-    estimator_u = xinv + (1/nxysub*np.matmul(M,((Rop*Fop).H*residual).ravel())).reshape(ny,nx)
+    estimator_u = xinv + (1/nxysub*np.matmul(M,((P*F).H*residual).ravel())).reshape(ny,nx)
 
     diff_gt_est_u = estimator_u - image
     print("L2-Norm u-Differenz: ", np.linalg.norm(diff_gt_est_u.flatten()))
@@ -147,8 +147,8 @@ for j in range(num_exp):
 
 
     """Calculater Remainder term with M"""
-    step = Rop*(Fop.dot(est_gt.ravel()))
-    restterm = 1/nxysub*np.matmul(M,((Rop*Fop).H*step).ravel()).reshape(nx,ny) - est_gt
+    step = P*(F.dot(est_gt.ravel()))
+    restterm = 1/nxysub*np.matmul(M,((P*F).H*step).ravel()).reshape(nx,ny) - est_gt
     print("L2-Norm Remainder term:", np.linalg.norm(restterm))
     print('Loo-Norm Remainder term', np.linalg.norm(restterm.ravel(), ord=np.inf))
     R_L2_M.append(np.linalg.norm(restterm))
@@ -156,7 +156,7 @@ for j in range(num_exp):
     restterm = restterm.flatten()
 
     """Calculate Gauss term with M"""
-    Gaussianterm = 1/nxysub*np.matmul(M,((Rop*Fop).H*n).ravel()).reshape(nx,ny)
+    Gaussianterm = 1/nxysub*np.matmul(M,((P*F).H*n).ravel()).reshape(nx,ny)
     Gaussianterm = Gaussianterm.flatten()
     Gaussianterm_normalized = np.sqrt(2*nxysub)*np.real(Gaussianterm)/(np.sqrt(diagonal)*sigma)  #np.sqrt(covariance_A)/sigma cov = 1 in uniform case
     print("L2-Norm Gauss term: ", np.linalg.norm(Gaussianterm))
