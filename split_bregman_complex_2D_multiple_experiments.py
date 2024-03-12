@@ -52,14 +52,7 @@ Rop = pylops.Restriction(nx*ny, iava, axis=0, dtype=np.complex128)
 nxysub = Rop.shape[0]
 Fop = pylops.signalprocessing.FFT2D(dims=(ny, nx), norm="none", fftshift_after=True, ifftshift_before=True)
 
-###############################################################################
-# Apply Split Bregman with anisotropic TV regularization (aka sum of L1 norms of the
-# first derivatives over x and y) for reconstruction of the image from the measurements,
-# define the first derivative operator here.
-#
-# .. math::
-#         J = \mu/2 ||\mathbf{y} - \mathbf{R} \mathbf{F} \mathbf{x}||_2
-#         + || \nabla_x \mathbf{x}||_1 + || \nabla_y \mathbf{x}||_1
+# Calculate the difference operator.
 
 Dop = [
     pylops.FirstDerivative(
