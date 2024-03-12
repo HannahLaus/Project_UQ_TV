@@ -18,7 +18,7 @@ It uses the package cupy for GPU acceleration/usage.
 If you don't have a GPU available you can change cp to np to always use numpy.
 """
 cp.cuda.Device(device=2).use()
-matrixtype = 'mat'
+matrixtype = 'dat'
 """ Choose the correct matrix type here:"""
 if matrixtype == 'mat':
     mask = scipy.io.loadmat("spiral_mask.mat")  # exchange for the right mask
