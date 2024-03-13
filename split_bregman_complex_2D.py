@@ -9,7 +9,6 @@ from phantominator import shepp_logan
 import skimage
 from skimage.color import rgb2gray
 import matplotlib.colors as colors
-import scipy.io
 from skimage.metrics import structural_similarity as ssim
 
 
@@ -45,9 +44,7 @@ elif sampling == "spiral":
     M = np.load("M_spiral.dat", allow_pickle=True)
     Msamplecov = np.matmul(M, samplecovariance)
     diagonal = np.diagonal(np.matmul(np.matmul(M, samplecovariance), np.conjugate(np.transpose(M))))
-    mask = scipy.io.loadmat("k_space_mask_spiral.mat")
-    mask = mask['k_space_mask']
-    mask = mask[50:206,50:206]
+    mask = np.load("k_space_mask_spiral_undersampling_factor_3.0.npy")
 else:
     print('Matrixtype not available')
     raise Exception
