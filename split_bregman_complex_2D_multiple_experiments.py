@@ -3,7 +3,6 @@ import os
 import numpy as np
 import pylops
 import matplotlib.colors as colors
-import scipy.io
 from phantominator import shepp_logan
 from skimage.metrics import structural_similarity as ssim
 
@@ -38,10 +37,7 @@ elif sampling == "spiral
     M = np.load("M_spiral.dat", allow_pickle=True)
     Msamplecov = np.matmul(M, samplecovariance)
     diagonal = np.diagonal(np.matmul(np.matmul(M, samplecovariance), np.conjugate(np.transpose(M))))
-    #mask = np.load("radial_mask.dat", allow_pickle=True)
-    mask = scipy.io.loadmat("k_space_mask_spiral.mat")
-    mask = mask['k_space_mask']
-    mask = mask[50:206,50:206]
+    mask = np.load("k_space_mask_spiral_undersampling_factor_3.0.npy")
 else:
     raise Exception
 
