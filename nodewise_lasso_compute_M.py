@@ -18,12 +18,11 @@ It uses the package cupy for GPU acceleration/usage.
 If you don't have a GPU available you can change cp to np to always use numpy.
 """
 cp.cuda.Device(device=2).use()
-matrixtype = 'dat'
+mask = 'radial'
 """ Choose the correct matrix type here:"""
-if matrixtype == 'mat':
-    mask = scipy.io.loadmat("spiral_mask.mat")  # exchange for the right mask
-    mask = mask['k_space_mask']
-elif matrixtype == 'dat':
+if mask == 'spiral':
+    mask =  np.load("k_space_mask_spiral_undersampling_factor_3.0.npy") # exchange for the right mask
+elif mask == 'radial':
     mask = np.load("radial_mask.dat", allow_pickle=True)  # exchange for the right mask
 else:
     raise Exception
