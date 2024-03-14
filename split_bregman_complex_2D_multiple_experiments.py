@@ -16,7 +16,7 @@ sampling = "radial"
 alpha = 0.05
 """Choose lambda and number of iterations for Split Bregman"""
 lamda = [0.05, 0.05]
-niter_out = 2000
+niter_out = 1000
 niter_in = 50
 
 """Load image and rescale"""
@@ -32,7 +32,7 @@ if sampling == "radial":
     Msamplecov = np.matmul(M, samplecovariance)
     diagonal = np.diagonal(np.matmul(np.matmul(M, samplecovariance), np.conjugate(np.transpose(M))))
     mask = np.load("radial_mask.dat", allow_pickle=True)
-elif sampling == "spiral
+elif sampling == "spiral":
     samplecovariance = np.load("samplecov_spiral.dat", allow_pickle=True)  #exchange here for the right masked
     M = np.load("M_spiral.dat", allow_pickle=True)
     Msamplecov = np.matmul(M, samplecovariance)
