@@ -16,12 +16,6 @@ def spiral_cart_w_edges_parameter_lut(undersampling_factor):
         n_spokes = 146
     elif undersampling_factor == 3:
         n_spokes = 94
-    elif undersampling_factor == 4:
-        n_spokes = 70
-    elif undersampling_factor == 8:
-        n_spokes = 34
-    elif undersampling_factor == 16:
-        n_spokes = 17
     else:
         raise ValueError('Unknown undersampling factor for spiral trajectory')
 
@@ -58,7 +52,7 @@ def create_spiral_kspace_trajectory(matrix, n_turns, n_spokes, k_space_corr_px, 
 
 
 #Choose undersampling factors and image size
-undersampling_factors = [2,3]  # [2, 3, 4, 8, 16]
+undersampling_factors = [2,3]  
 save_mask = True
 matrix = 256
 
