@@ -1,4 +1,4 @@
-# Project_UQ_TV
+# Imaging with Confidence
 
 This is the code to the paper "Imaging with Confidence: Uncertainty Quantification for High-dimensional Undersampled MR Images".
 
