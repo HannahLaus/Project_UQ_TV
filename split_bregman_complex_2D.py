@@ -260,7 +260,7 @@ rest_sorted = restterm[idx_rest_sorted]
 
 Gaussianterm = 1/nxysub*np.matmul(M,((P*F).H*n).ravel()).reshape(nx,ny)
 Gaussianterm = Gaussianterm.flatten()
-Gaussianterm_normalized = np.sqrt(2*nxysub)*np.real(Gaussianterm)/(np.sqrt(diagonal)*sigma)  #np.sqrt(covariance_A)/sigma cov = 1 in uniform case
+Gaussianterm_normalized = np.sqrt(2*nxysub)*np.real(Gaussianterm)/(np.sqrt(diagonal)*sigma)  
 print("L2-Norm Gauss term: ", np.linalg.norm(Gaussianterm))
 print('Loo-Norm Gauss term', np.linalg.norm(Gaussianterm, ord=np.inf))
 idx_Gauss_sorted = np.argsort(Gaussianterm_normalized)
