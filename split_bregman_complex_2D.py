@@ -60,26 +60,10 @@ n_full = sigma/(np.sqrt(2)) * np.random.normal(0, 1, (ny, nx, 2)).view(np.comple
 n = P * n_full.ravel()
 y = P * ((F * image).ravel() + n_full.ravel())
 print('noise rate', np.linalg.norm(n)/np.linalg.norm(P * F * image.ravel()))
-yfft = F * image + n_full
-ymask = P.mask(F * image+n_full).reshape(nx,ny)
+kspace = F * image + n_full
 
 
-"""Plot model, full kspace data, undersampled k-space data and mask"""
-fig, axs = plt.subplots(1, 3, figsize=(14, 5))
-im=axs[0].imshow(image_abs, cmap="gray")
-axs[0].set_title("Model")
-axs[0].axis("tight")
-plt.colorbar(im, ax=axs[0])
-im = axs[1].imshow(np.abs(yfft),norm=colors.LogNorm(vmin=np.abs(yfft).min(), vmax=np.abs(yfft).max()), cmap="rainbow")
-axs[1].set_title("Full data")
-axs[1].axis("tight")
-plt.colorbar(im, ax=axs[1])
-axs[2].imshow(np.abs(ymask), norm=colors.LogNorm(vmin=np.abs(yfft).min(), vmax=np.abs(yfft).max()), cmap="rainbow")
-axs[2].set_title("Sampled data")
-axs[2].axis("tight")
-plt.colorbar(im, ax=axs[2])
-plt.tight_layout()
-plt.savefig('model_full_data_sampled.pdf')
+"""Plot model, full kspace data and mask"""
 
 plt.figure(2)
 plt.imshow(mask.astype(int), cmap="binary")
@@ -87,7 +71,7 @@ plt.colorbar()
 plt.savefig('mask.pdf')
 
 plt.figure(3)
-plt.imshow(np.abs(yfft),norm=colors.LogNorm(vmin=np.abs(yfft).min(), vmax=np.abs(yfft).max()), cmap="rainbow")
+plt.imshow(np.abs(kspace),norm=colors.LogNorm(vmin=np.abs(kspace).min(), vmax=np.abs(kspace).max()), cmap="rainbow")
 plt.colorbar()
 plt.savefig('kspace.pdf')
 
