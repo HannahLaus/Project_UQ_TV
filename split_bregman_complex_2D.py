@@ -29,7 +29,7 @@ sigma = 0.1
 """Choose paramters for Split bregman """
 mu_factor = 20
 lamda = [0.05, 0.05]
-niter_out = 1000
+niter_out = 2000
 niter_in = 50
 
 """Load mask, samplecovariance matrix and M and calculate diagonal"""
