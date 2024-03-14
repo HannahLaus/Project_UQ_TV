@@ -79,7 +79,6 @@ for j_undersampling_factor in range(len(undersampling_factors)):
                     (round(k[1, jn, j_spoke]) <= k_space_mask.shape[1]) and \
                     (k_space_mask.shape[0] - round(k[0, jn, j_spoke]) > 0) and \
                     (round(k[1, jn, j_spoke]) > 0):
-                print(jn, j_spoke, round(k[0, jn, j_spoke]), round(k[1, jn, j_spoke]))
                 k_space_mask[-(round(k[0, jn, j_spoke])-1), round(k[1, jn, j_spoke])-1] = 1
 
     # Actual undersampling factor plus/minus 0.05
