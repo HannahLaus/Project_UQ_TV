@@ -50,10 +50,10 @@ else:
     raise Exception
 
 """Calculate operator A=P*F """
-iava = np.nonzero(mask.flatten())[0]
+idces = np.nonzero(mask.flatten())[0]
 
 
-P = pylops.Restriction(nx*ny, iava, axis=0, dtype=np.complex128)
+P = pylops.Restriction(nx*ny, idces, axis=0, dtype=np.complex128)
 nxysub = P.shape[0]
 F = pylops.signalprocessing.FFT2D(dims=(ny, nx), norm="none", fftshift_after=True, ifftshift_before=True)
 n_full = sigma/(np.sqrt(2)) * np.random.normal(0, 1, (ny, nx, 2)).view(np.complex128)[:,:,0]
