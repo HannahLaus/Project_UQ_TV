@@ -117,7 +117,6 @@ xinv = pylops.optimization.sparsity.splitbregman(
     1/np.sqrt(nxysub)*P * F,
     1/np.sqrt(nxysub)*y.ravel(),
     D,
-    x0=image.ravel(),
     niter_outer=niter_out,
     niter_inner=niter_in,
     mu=mu,
