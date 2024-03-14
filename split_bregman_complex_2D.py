@@ -216,13 +216,13 @@ estimator_u_abs = np.abs(estimator_u)
 
 
 plt.figure(10)
-plt.errorbar(range(nx), estimator_u_abs[78, :], yerr=delta.reshape(nx,ny)[78,:], capsize=2, marker='o', drawstyle='steps', linestyle='', markerfacecolor='none')
+plt.errorbar(range(nx), estimator_u_abs[78, :], yerr=np.abs(delta.reshape(nx,ny)[78,:]), capsize=2, marker='o', drawstyle='steps', linestyle='', markerfacecolor='none')
 plt.plot(image_abs[78, :], 'r+')
 plt.plot(xinv_abs[78, :], '+', color="orange")
 plt.savefig('confidenceintervalsline78.pdf')
 
 plt.figure(11)
-plt.errorbar(range(nx), estimator_u_abs[123, :], yerr=delta.reshape(nx,ny)[123,:], capsize=2, marker='o', drawstyle='steps', linestyle='', markerfacecolor='none')
+plt.errorbar(range(nx), estimator_u_abs[123, :], yerr=np.abs(delta.reshape(nx,ny)[123,:]), capsize=2, marker='o', drawstyle='steps', linestyle='', markerfacecolor='none')
 plt.plot(image_abs[123, :], 'm+')
 plt.plot(xinv_abs[123, :], 'y+')
 plt.savefig('confidenceintervalsline123.pdf')
